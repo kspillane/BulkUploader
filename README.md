@@ -1,4 +1,4 @@
-(# BulkUploader
+# BulkUploader
 A python GUI (tkinter) program for uploading a file to multiple servers
 
 Nothing too much here. Wrote this for work and though others may find it useful. Feel free to submit requests if you want something changes, or submit a PR if you have a change!
