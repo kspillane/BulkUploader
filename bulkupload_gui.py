@@ -247,34 +247,36 @@ def do_upload():
         try:
             ftp = FTP(server)
         except socket.error, e:
-            storemsg = "There was an error connecting to server "+server+".\nThere error was:\n"+e
+            storemsg = "There was an error connecting to server "+server
             loglist.append(storemsg)
             tkMessageBox.showwarning(message=storemsg)
+            break
         else:
                 try:
                     ftp.login(username, password)
-                except error_perm, e:
-                    tkMessageBox.showerror(message="There was a permissions error logging in.\n Check the username and password")
-                    return
-                loglist.append("Connected. Sending file.")
-                try:
-                    #Comment out the next three lines to enable dry-run mode. Connect only, no upload.
-                    #fp = open(datfile, "rb")
-                    #ftp.storbinary("STOR " + datfilename, fp)
-                    ftp.quit()
-                except IOError as e:
-                    storemsg = "There was an error storing the file on server "+server+".\nThere error was:\n"+e
-                    loglist.append(storemsg)
-                    tkMessageBox.showwarning(message=storemsg)
-                except errpr_perm:
-                    storemsg = "There was an error storing the file on server "+server+".\nProbably a permissions error."
-                    loglist.append(storemsg)
-                    tkMessageBox.showwarning(message=storemsg)
+                except:
+                    tkMessageBox.showerror(message="There was a error logging into "+server+".\n Check the username and password")
+                    loglist.append("There was an error logging into server "+server+".")
                 else:
-                    count += 1
-                    loglist.append("File uploaded. Closing connection to "+server)
-                    percentDone.set("Uploaded "+str(count)+" of "+str(len(srvListUp)))
-                    w.update()
+                    loglist.append("Connected. Sending file.")
+                    try:
+                        #Comment out the next two lines to enable dry-run mode. Connect only, no upload.
+                        fp = open(datfile, "rb")
+                        ftp.storbinary("STOR " + datfilename, fp)
+                        ftp.quit()
+                    except IOError as e:
+                        storemsg = "There was an error storing the file on server "+server
+                        loglist.append(storemsg)
+                        tkMessageBox.showwarning(message=storemsg)
+                    except errpr_perm:
+                        storemsg = "There was an error storing the file on server "+server+".\nProbably a permissions error."
+                        loglist.append(storemsg)
+                        tkMessageBox.showwarning(message=storemsg)
+                    else:
+                        count += 1
+                        loglist.append("File uploaded. Closing connection to "+server)
+                        percentDone.set("Uploaded "+str(count)+" of "+str(len(srvListUp)))
+                        w.update()
     stopBtn.destroy()
     percentDoneLbl.destroy()
     uploadBtn.grid(row=4, column=3, sticky='W', padx=5, pady=2)
